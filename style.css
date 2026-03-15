@@ -143,9 +143,6 @@ form button{
     pointer-events:none;
 }
 
-
-/* POP ICON */
-
 .pop_icon{
     position:absolute;
     font-size:40px;
@@ -170,9 +167,6 @@ form button{
     }
 
 }
-
-
-/* STAR ANIMATION */
 
 .star{
     position:absolute;

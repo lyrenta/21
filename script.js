@@ -7,6 +7,8 @@ const likeSound = document.getElementById("like_sound")
 const dislikeSound = document.getElementById("dislike_sound")
 const boomSound = document.getElementById("boom_sound")
 
+const xhr = new XMLHttpRequest();
+
 document.addEventListener("click", function(e){
 
     if(e.target.closest(".like_btn")){
@@ -124,3 +126,7 @@ function spawnStars(){
     }
 
 }
+
+xhr.open('GET', 'http://localhost:3000/jokes');
+xhr.send();
+xhr.onload = () => console.log(xhr.responce)
