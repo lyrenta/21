@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JokeHub</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+    <h1>😂 | JokeHub</h1>
+    <p>Read, like, dislike, or submit your own jokes!</p>
+</header>
+
+<main>
+    <section>
+        <h2>📁 | Community Jokes</h2>
+        <div id="jokes_container">
+            <div class="joke">
+                <p class="joke_text">
+                    Why don’t programmers like nature?  
+                    It has too many bugs.
+                </p>
+                <div class="joke_actions">
+                    <button class="like_btn">👍 | Like</button>
+                    <span class="likes_count">3</span>
+
+                    <button class="dislike_btn">👎 | Dislike</button>
+                    <span class="dislikes_count">1</span>
+                </div>
+            </div>
+            <div class="joke">
+                <p class="joke_text">
+                    Why did the computer go to therapy?  
+                    It had too many bytes from the past.
+                </p>
+                <div class="joke_actions">
+                    <button class="like_btn">👍 | Like</button>
+                    <span class="likes_count">5</span>
+                    <button class="dislike_btn">👎 | Dislike</button>
+                    <span class="dislikes_count">0</span>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section>
+        <h2>📨 | Submit Your Joke</h2>
+        <form id="joke_form">
+            <input 
+                type="text" 
+                id="joke_input"
+                placeholder="Write your joke here..."
+                required>
+            <button type="submit">🗳️ | Submit Joke</button>
+        </form>
+    </section>
+</main>
+
+<div id="effects_container"></div>
+<audio id="like_sound" src="like.mp3"></audio>
+<audio id="dislike_sound" src="dislike.mp3"></audio>
+<audio id="boom_sound" src="boom.mp3"></audio>
+</body>
+<script src="script.js"></script>
+</html>
