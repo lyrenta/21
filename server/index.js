@@ -7,12 +7,14 @@ const dataPath = path.join(__dirname, 'data')
 
 const server = http.createServer((request, response) => { 
     try {
+        // CORS headers
         response.setHeader('Access-Control-Allow-Origin', '*');
         response.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
         response.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
+        // Handle preflight request
         if (request.method === 'OPTIONS') {
-            response.writeHead(204);
+            response.writeHead(204); // No Content
             return response.end();
         }
 
@@ -31,7 +33,7 @@ const server = http.createServer((request, response) => {
     } catch(e) {
         response.statusCode = 500;
         response.end('Error 500')
-    } 
+    }
 })
 
 server.listen(3000, () => console.log('Server running on port 3000'))
