@@ -7,100 +7,87 @@ const dataPath = path.join(__dirname, 'data')
 
 const server = http.createServer((request, response) => { 
     try {
+        // CORS headers
         response.setHeader('Access-Control-Allow-Origin', '*');
+        response.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+        response.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-        if (request.url == "/jokes" && request.method == 'GET') {
-        getAllJokes(request, response)
+        // Handle preflight request
+        if (request.method === 'OPTIONS') {
+            response.writeHead(204); // No Content
+            return response.end();
         }
 
-        if (request.url == "/jokes" && request.method == 'POST') {
-        addJoke(request, response)
+        if (request.url == "/jokes" && request.method === 'GET') {
+            getAllJokes(response)
+        } else if (request.url == "/jokes" && request.method === 'POST') {
+            addJoke(request, response)
+        } else if (request.url.startsWith('/like')) {
+            like(request, response)
+        } else if (request.url.startsWith('/dislike')) {
+            dislike(request, response)
+        } else {
+            response.statusCode = 404
+            response.end('Not Found')
         }
-
-        if (request.url.startsWith('/like')) {
-        like(request, response)
-        }
-
-        if (request.url.startsWith('/dislike')) {
-        dislike(request, response)
-        }
-    }
-    catch(e) {
+    } catch(e) {
         response.statusCode = 500;
-        return responce.end('Error 500')
-    }
-});
+        response.end('Error 500')
+    } 
+})
 
+server.listen(3000, () => console.log('Server running on port 3000'))
 
-server.listen(3000)
-
-function getAllJokes(request, responce) {
-    let dir = fs.readdirSync(dataPath)
-    let allJokes = [];
+function getAllJokes(response) {
+    let dir = fs.readdirSync(dataPath).filter(f => f.endsWith('.json'))
+    let allJokes = []
 
     for (let i = 0; i < dir.length; i++) {
-        let file = fs.readFileSync(
-            path.join(dataPath, i + '.json')
-        )
-
-        let jokeJson = Buffer.from(file).toString()
-        let joke = JSON.parse(jokeJson)
-
-        joke.id = i;
-
-        allJokes.push(joke);
+        let file = fs.readFileSync(path.join(dataPath, dir[i]))
+        let joke = JSON.parse(file)
+        joke.id = i
+        allJokes.push(joke)
     }
 
-    responce.end(JSON.stringify(allJokes))
+    response.end(JSON.stringify(allJokes))
 }
 
-function addJoke(request, responce) {
+function addJoke(request, response) {
     let data = ''
-    request.on('data', function (chunk) {
-        data += chunk
-    })
-
-    request.on('end', function () {
+    request.on('data', chunk => data += chunk)
+    request.on('end', () => {
         let joke = JSON.parse(data)
-        joke.likes = 0;
-        joke.dislikes = 0;
+        joke.likes = 0
+        joke.dislikes = 0
 
         let dir = fs.readdirSync(dataPath)
         let fileName = dir.length + '.json'
-        let filePath = path.join(dataPath, fileName)
+        fs.writeFileSync(path.join(dataPath, fileName), JSON.stringify(joke))
 
-        fs.writeFileSync(filePath, JSON.stringify(joke))
-
-        responce.end()
+        response.end()
     })
 }
 
-function like(request, responce) {
-    const url = require('url')
-    const params = url.parse(request.url, true).query;
-    let id = params.id
-    if (id) {
-        let filePath = path.join(dataPath, id + '.json')
-        let file = fs.readFileSync(filePath)
-        let jokeJSON = Buffer.from(file).toString();
-        let joke = JSON.parse(jokeJSON)
-        joke.likes++;
+function like(request, response) {
+    const params = url.parse(request.url, true).query
+    const id = params.id
+    if (id !== undefined) {
+        const filePath = path.join(dataPath, id + '.json')
+        const joke = JSON.parse(fs.readFileSync(filePath))
+        joke.likes++
         fs.writeFileSync(filePath, JSON.stringify(joke))
     }
-    responce.end()
+    response.end()
 }
 
-function dislike(request, responce) {
-    const url = require('url')
-    const params = url.parse(request.url, true).query;
-    let id = params.id
-    if (id) {
-        let filePath = path.join(dataPath, id + '.json')
-        let file = fs.readFileSync(filePath)
-        let jokeJSON = Buffer.from(file).toString();
-        let joke = JSON.parse(jokeJSON)
-        joke.dislikes++;
+function dislike(request, response) {
+    const params = url.parse(request.url, true).query
+    const id = params.id
+    if (id !== undefined) {
+        const filePath = path.join(dataPath, id + '.json')
+        const joke = JSON.parse(fs.readFileSync(filePath))
+        joke.dislikes++
         fs.writeFileSync(filePath, JSON.stringify(joke))
     }
-    responce.end()
+    response.end()
 }
