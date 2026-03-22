@@ -56,10 +56,7 @@ document.addEventListener("click", e => {
 function sendReaction(type, id, jokeElem, event) {
     const xhr = new XMLHttpRequest()
     xhr.open('GET', `http://localhost:3000/${type}?id=${id}`)
-    xhr.onload = () => {
-        const countElem = type === 'like' ? jokeElem.querySelector('.likes_count') : jokeElem.querySelector('.dislikes_count')
-        countElem.textContent = Number(countElem.textContent) + 1
-    }
+    xhr.onload = () => fetchJokes() 
     xhr.send()
 
     if(type === 'like'){

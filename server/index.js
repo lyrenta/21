@@ -45,7 +45,7 @@ function getAllJokes(response) {
     for (let i = 0; i < dir.length; i++) {
         let file = fs.readFileSync(path.join(dataPath, dir[i]))
         let joke = JSON.parse(file)
-        joke.id = i
+        joke.id = path.parse(dir[i]).name
         allJokes.push(joke)
     }
 
@@ -60,8 +60,7 @@ function addJoke(request, response) {
         joke.likes = 0
         joke.dislikes = 0
 
-        let dir = fs.readdirSync(dataPath)
-        let fileName = dir.length + '.json'
+        let fileName = Date.now() + '.json'
         fs.writeFileSync(path.join(dataPath, fileName), JSON.stringify(joke))
 
         response.end()
