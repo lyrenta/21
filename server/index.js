@@ -6,22 +6,28 @@ const url = require('url')
 const dataPath = path.join(__dirname, 'data')
 
 const server = http.createServer((request, response) => { 
-    response.setHeader('Access-Control-Allow-Origin', '*');
+    try {
+        response.setHeader('Access-Control-Allow-Origin', '*');
 
-    if (request.url == "/jokes" && request.method == 'GET') {
+        if (request.url == "/jokes" && request.method == 'GET') {
         getAllJokes(request, response)
-    }
+        }
 
-    if (request.url == "/jokes" && request.method == 'POST') {
+        if (request.url == "/jokes" && request.method == 'POST') {
         addJoke(request, response)
-    }
+        }
 
-    if (request.url.startsWith('/like')) {
+        if (request.url.startsWith('/like')) {
         like(request, response)
-    }
+        }
 
-    if (request.url.startsWith('/dislike')) {
+        if (request.url.startsWith('/dislike')) {
         dislike(request, response)
+        }
+    }
+    catch(e) {
+        response.statusCode = 500;
+        return responce.end('Error 500')
     }
 });
 
