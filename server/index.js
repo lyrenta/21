@@ -7,14 +7,12 @@ const dataPath = path.join(__dirname, 'data')
 
 const server = http.createServer((request, response) => { 
     try {
-        // CORS headers
         response.setHeader('Access-Control-Allow-Origin', '*');
         response.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
         response.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-        // Handle preflight request
         if (request.method === 'OPTIONS') {
-            response.writeHead(204); // No Content
+            response.writeHead(204);
             return response.end();
         }
 
